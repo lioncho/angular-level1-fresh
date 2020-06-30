@@ -1,38 +1,51 @@
-import { Subject } from 'rxjs/Subject';
+import {User} from './user.model';
+import {AuthData} from './auth-data.model';
+import {Subject} from 'rxjs/Subject';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 
-import { User } from './user.model';
-import { AuthData } from './auth-data.model';
-
+@Injectable()
 export class AuthService {
-  authChange = new Subject<boolean>();
-  private user: User;
+    authChange = new Subject<boolean>();
+    private user: User;
 
-  registerUser(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString()
-    };
-    this.authChange.next(true);
-  }
+    constructor(private router: Router) {}
 
-  login(authData: AuthData) {
-    this.user = {
-      email: authData.email,
-      userId: Math.round(Math.random() * 10000).toString()
-    };
-    this.authChange.next(true);
-  }
+    registerUser(authData: AuthData) {
+        // Without Server
+        this.user = {
+            email: authData.email,
+            userId: Math.round(Math.random() * 100000).toString()
+        };
+        this.authSuccessfully();
+        this.router.navigate(['/training']);
+    }
 
-  logout() {
-    this.user = null;
-    this.authChange.next(false);
-  }
+    login(authData: AuthData) {
+        this.user = {
+            email: authData.email,
+            userId: Math.round(Math.random() * 100000).toString()
+        };
+        this.authSuccessfully();
+        this.router.navigate(['/training']);
+    }
 
-  getUser() {
-    return { ...this.user };
-  }
+    logout() {
+        this.user = null;
+        this.authChange.next(false);
+        this.router.navigate(['/login']);
+    }
 
-  isAuth() {
-    return this.user != null;
-  }
+    getUser() {
+        return { ...this.user };
+    }
+
+    isAuth() {
+        return this.user != null;
+    }
+
+    authSuccessfully() {
+        this.authChange.next(true);
+    }
+
 }
