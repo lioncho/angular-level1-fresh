@@ -46,3 +46,4 @@ environment.prod.ts
 
 # Dependabot alerts
 package.json
+package.json.lock
